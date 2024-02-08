@@ -1,0 +1,14 @@
+/Microservices/customer/node_modules
+/Microservices/gateway/node_modules
+/Microservices/shopping/node_modules
+/Microservices/product/node_modules
+/Monolithic/node_modules
+
+
+/package-lock.json
+
+/app_error.log
+
+/env
+
+/env.dev
