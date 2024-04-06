@@ -23,7 +23,7 @@ module.exports.PlaceOrder=async (req,res,next) => {
         }
         
         // PublishCustomerEvent(payloadData.data);
-        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,Buffer.from(JSON.parse(payloadData.data)))
+        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,JSON.parse(payloadData.data))
         return res.status(200).json(data);
         
     } catch (err) {

@@ -95,8 +95,8 @@ module.exports.AddToCart=async(req,res,next)=>{
     // PublishCustomerEvent(data);
     // PublishShoppingEvent(data);
 
-    PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,Buffer.from(JSON.stringify(data)));
-    PublishMessage(req.rabbitMQChannel,SHOPPING_BINDING_KEY,Buffer.from(JSON.stringify(data)));
+    PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,JSON.stringify(data));
+    PublishMessage(req.rabbitMQChannel,SHOPPING_BINDING_KEY,JSON.stringify(data));
 
     return res.status(200).json({
         "msg":"Added Successfully"
@@ -129,8 +129,8 @@ module.exports.DeleteFromCart=async(req,res,next)=>{
         // PublishCustomerEvent(data);
         // PublishShoppingEvent(data);
 
-        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,Buffer.from(JSON.stringify(data)));
-        PublishMessage(req.rabbitMQChannel,SHOPPING_BINDING_KEY,Buffer.from(JSON.stringify(data)));
+        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,JSON.stringify(data));
+        PublishMessage(req.rabbitMQChannel,SHOPPING_BINDING_KEY,JSON.stringify(data));
     
         return res.status(200).json({
             "msg":"Removed Successfully"
@@ -171,7 +171,7 @@ module.exports.AddToWishList=async(req,res,next)=>{
             })
         }
         // PublishCustomerEvent(data);
-        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,Buffer.from(JSON.stringify(data)));
+        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,JSON.stringify(data));
 
         return res.status(200).json({
             "msg":"Added Successfully"
@@ -192,7 +192,7 @@ module.exports.RemoveFromWishList=async(req,res,next)=>{
             })
         }
         // PublishCustomerEvent(data);
-        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,Buffer.from(JSON.stringify(data)));
+        PublishMessage(req.rabbitMQChannel,CUSTOMER_BINDING_KEY,JSON.stringify(data));
 
         return res.status(200).json({
             msg:"Removed Successfully"
