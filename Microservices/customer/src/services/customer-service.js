@@ -123,12 +123,14 @@ class CustomerService{
         const {event,data}=payload;
         const {userId,product,order,qty}=data;
         switch(event){
-            case 'Add_TO_WISHLIST':
+            case 'ADD_TO_WISHLIST':
+                break;
             case 'REMOVE_FROM_WISHLIST':
                 // this.AddToWishlist(userid,product)
                 break;
-            case 'Add_TO_CART':
+            case 'ADD_TO_CART':
                 this.ManageCart(userId,product,qty,false);
+                
                 break;
             case 'REMOVE_FROM_CART':
                     this.ManageCart(userId,product,qty,true);

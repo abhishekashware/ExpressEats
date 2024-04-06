@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const {CustomerService}=require('../../services');
-const service=new CustomerService();
+const { SubscribeMessage } = require('../../utils');
 //SignUp
 module.exports.SignUp=async(req,res,next)=>{
     try{
@@ -11,7 +11,7 @@ module.exports.SignUp=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await service.SignUp({email,password,phone});
+        const {data}=await req.service.SignUp({email,password,phone});
         return res.json(data);
     }catch(err){
         next(err)
@@ -27,7 +27,7 @@ module.exports.SignIn=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await service.SignIn({email,password});
+        const {data}=await req.service.SignIn({email,password});
         return res.json(data);
     }catch(err){
         next(err)
@@ -45,7 +45,7 @@ module.exports.AddAddress=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await service.AddAddress({_id,street,postalcode,city,country});
+        const {data}=await req.service.AddAddress({_id,street,postalcode,city,country});
         return res.json(data);
     }catch(err){
         next(err)
@@ -62,7 +62,7 @@ module.exports.GetProfile=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await service.GetProfile({_id});
+        const {data}=await req.service.GetProfile({_id});
         return res.json(data);
     }catch(err){
         next(err)
@@ -79,7 +79,7 @@ module.exports.GetWishlist=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await service.GetWishlist({_id});
+        const {data}=await req.service.GetWishlist({_id});
         return res.json(data);
     }catch(err){
         next(err)

@@ -1,8 +1,9 @@
 const jwt=require("jsonwebtoken");
 const bcrypt=require('bcrypt');
 const {validationResult}=require('express-validator');
-const {APP_SECRET}=require('../config');
+const {APP_SECRET,EXCHANGE_NAME}=require('../config');
 const axios=require('axios');
+const amqplib=require('amqplib');
 
 module.exports.ValidateSignature = async (req) => {
     try {
@@ -59,4 +60,26 @@ module.exports.PublishShoppingEvent= async(payload)=>{
   axios.post('http://localhost:8000/shopping/app-events',{
     payload
   })
+}
+
+
+module.exports.CreateChannel=async()=>{
+  try{
+    const connection=await amqplib.connect('amqp://localhost');
+    const channel=await connection.createChannel();
+    console.log("channel created");
+    await channel.assertExchange(EXCHANGE_NAME,'direct',{durable:false});
+    return channel;
+  }catch(err){
+    throw err
+  }
+}
+
+module.exports.PublishMessage=async(channel,bindingKey,message)=>{
+  try{
+   channel.publish(EXCHANGE_NAME,bindingKey,Buffer.from(message))
+   console.log("published",message);
+  }catch(err){
+    throw err
+  }
 }

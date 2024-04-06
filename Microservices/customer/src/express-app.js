@@ -3,7 +3,8 @@ const cors=require('cors');
 const { customerRoutes } = require('./api/routes');
 const HandleErrors = require('./utils/error-handler');
 const { appEvents } = require('./api/controllers');
-const expressApp=async(app)=>{
+const { SubscribeMessage } = require('./utils');
+const expressApp=async(app,channel,service)=>{
     //middlewares
 app.use(express.json({limit:'1mb'}));
 app.use(express.urlencoded({extended:true,limit:'1mb'}));
@@ -12,9 +13,24 @@ app.use(express.static(__dirname+'/public'));
 
 
 
-//app events
+//appEvents(app)
+app.use(async(req,res,next)=>{
+    try {
+        req.rabbitMQChannel = channel;
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
 
-appEvents(app)
+app.use(async(req,res,next)=>{
+    try {
+        req.service = service;
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
 
 //APIs
 app.use('/',customerRoutes);

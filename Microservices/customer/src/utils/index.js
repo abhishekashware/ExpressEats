@@ -1,7 +1,8 @@
 const jwt=require("jsonwebtoken");
 const bcrypt=require('bcrypt');
 const {validationResult}=require('express-validator');
-const {APP_SECRET}=require('../config');
+const {APP_SECRET,CUSTOMER_QUEUE,EXCHANGE_NAME}=require('../config');
+const amqplib=require('amqplib');
 
 module.exports.ValidateSignature = async (req) => {
     try {
@@ -48,3 +49,29 @@ module.exports.GenerateSignature = async (payload) => {
     }
 };
 
+
+module.exports.CreateChannel=async()=>{
+  try{
+    const connection=await amqplib.connect('amqp://localhost');
+    const channel=await connection.createChannel();
+    console.log("channel created");
+    await channel.assertExchange(EXCHANGE_NAME,'direct',{durable:false});
+    return channel;
+  }catch(err){
+    throw err
+  }
+}
+
+module.exports.SubscribeMessage=async(channel,service,bindingKey)=>{
+  try{
+    await channel.assertQueue(CUSTOMER_QUEUE,{durable:false});
+    await channel.bindQueue(CUSTOMER_QUEUE,EXCHANGE_NAME,bindingKey);
+    channel.consume(CUSTOMER_QUEUE,msg=>{
+      console.log('received ',msg.content.toString());
+      service.SubscribeEvents(JSON.parse(msg.content.toString()))
+      channel.ack(msg);
+    })
+  }catch(err){
+    throw err
+  }
+}

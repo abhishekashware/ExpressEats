@@ -17,5 +17,9 @@ const dotEnv=require('dotenv');
 module.exports={
     PORT:8003,
     DB_URL:'mongodb://localhost:27017/shopping_ms_shopping',
-    APP_SECRET:'abhishek_node_project'
+    APP_SECRET:'abhishek_node_project',
+    SHOPPING_QUEUE:'SHOPPING_QUEUE',
+    EXCHANGE_NAME:'EXCHANGE_NAME',
+    SHOPPING_BINDING_KEY:'SHOPPING_BINDING_KEY',
+    CUSTOMER_BINDING_KEY:'CUSTOMER_BINDING_KEY'
 };

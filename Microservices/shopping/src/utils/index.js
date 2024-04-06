@@ -1,7 +1,8 @@
 const jwt=require("jsonwebtoken");
 const bcrypt=require('bcrypt');
 const {validationResult}=require('express-validator');
-const {APP_SECRET}=require('../config');
+const {APP_SECRET,EXCHANGE_NAME,SHOPPING_QUEUE}=require('../config');
+const amqplib=require('amqplib');
 
 module.exports.ValidateSignature = async (req) => {
     try {
@@ -48,11 +49,11 @@ module.exports.GenerateSignature = async (payload) => {
     }
 };
 
-module.exports.PublishCustomerEvent= async(payload)=>{
-  axios.post('http://localhost:8000/customer/app-events',{
-    payload
-  })
-}
+// module.exports.PublishCustomerEvent= async(payload)=>{
+//   axios.post('http://localhost:8000/customer/app-events',{
+//     payload
+//   })
+// }
 
 // module.exports.PublishProductEvent= async(payload)=>{
 //   axios.post('http://localhost:8000/product/app-events',{
@@ -60,3 +61,39 @@ module.exports.PublishCustomerEvent= async(payload)=>{
 //   })
 // }
 
+
+
+module.exports.CreateChannel=async()=>{
+  try{
+    const connection=await amqplib.connect('amqp://localhost');
+    const channel=await connection.createChannel();
+    console.log("channel created");
+    await channel.assertExchange(EXCHANGE_NAME,'direct',{durable:false});
+    return channel;
+  }catch(err){
+    throw err
+  }
+}
+module.exports.PublishMessage=async(channel,bindingKey,message)=>{
+  try{
+   channel.publish(EXCHANGE_NAME,bindingKey,Buffer.from(message))
+   console.log("published",message);
+
+  }catch(err){
+    throw err
+  }
+}
+
+module.exports.SubscribeMessage=async(channel,service,bindingKey)=>{
+  try{
+    await channel.assertQueue(SHOPPING_QUEUE,{durable:false});
+    await channel.bindQueue(SHOPPING_QUEUE,EXCHANGE_NAME,bindingKey);
+    channel.consume(SHOPPING_QUEUE,msg=>{
+      console.log('received ',msg.content.toString());
+      service.SubscribeEvents(JSON.parse(msg.content.toString()));
+      channel.ack(msg);
+    })
+  }catch(err){
+    throw err
+  }
+}
