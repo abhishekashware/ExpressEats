@@ -73,17 +73,29 @@ class ShoppingService{
         }
     }
 
+    async CreateCart(customerId){
+        try{
+            const cartResult=await this.repository.CreateCart(customerId);
+            return FormattedData(cartResult);
+        }catch(err){
+            throw err;
+        }
+    }
+
 
     async SubscribeEvents(payload){
         const {event,data}=payload;
-        const {userId,orderId,amt}=data;
+        console.log("rece",payload);
+        const {userId,product,qty}=data;
         switch(event){
-            case 'Add_TO_CART':
-                this.ManageCart(userId,{_id:orderId,amt},qty,false);
+            case 'ADD_TO_CART':
+                this.ManageCart(userId,product,qty,false);
                 break;
             case 'REMOVE_FROM_CART':
-                    this.ManageCart(userId,{_id:orderId,amt},qty,true);
+                    this.ManageCart(userId,product,qty,true);
                     break;
+            case 'SIGNUP':
+                 this.CreateCart(userId);
             default:break;
         }
     }

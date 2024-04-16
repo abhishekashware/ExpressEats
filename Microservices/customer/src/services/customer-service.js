@@ -119,6 +119,25 @@ class CustomerService{
     }
 
 
+
+    async GetUserPayload(userId,event){
+        const user=await this.repository.FindCustomerById(userId);
+        if(user){
+            const payload={
+                event,
+                data:{
+                    userId,
+                    product:null,
+                    qty:0
+                }
+            }
+            return FormattedData(payload)
+        }else{
+            return FormattedData({error:"No User Available"})
+        }
+    }
+
+
     async SubscribeEvents(payload){
         const {event,data}=payload;
         const {userId,product,order,qty}=data;

@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const {CustomerService}=require('../../services');
-const { SubscribeMessage } = require('../../utils');
+const { SubscribeMessage, PublishMessage } = require('../../utils');
+const { SHOPPING_BINDING_KEY } = require('../../config');
 //SignUp
 module.exports.SignUp=async(req,res,next)=>{
     try{
@@ -11,8 +12,11 @@ module.exports.SignUp=async(req,res,next)=>{
                 errors:errors.array()
             })
         }
-        const {data}=await req.service.SignUp({email,password,phone});
-        return res.json(data);
+        const result=await req.service.SignUp({email,password,phone});
+        const {data}=  await req.service.GetUserPayload(result.data.id,'SIGNUP')
+
+        PublishMessage(req.rabbitMQChannel,SHOPPING_BINDING_KEY,JSON.stringify(data));
+        return res.json(result.data);
     }catch(err){
         next(err)
     }

@@ -62,6 +62,15 @@ module.exports.CreateChannel=async()=>{
   }
 }
 
+module.exports.PublishMessage=async(channel,bindingKey,message)=>{
+  try{
+   channel.publish(EXCHANGE_NAME,bindingKey,Buffer.from(message))
+   console.log("published",message);
+  }catch(err){
+    throw err
+  }
+}
+
 module.exports.SubscribeMessage=async(channel,service,bindingKey)=>{
   try{
     await channel.assertQueue(CUSTOMER_QUEUE,{durable:false});

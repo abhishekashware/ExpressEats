@@ -161,7 +161,12 @@ class CustomerRepository{
                     cartItems.map((item)=>{
     
                         if(item.product._id.toString()===_id.toString()){
-                            item.unit=qty;
+                            
+                            if(IsRemove){
+                                cartItems.splice(cartItems.indexOf(item), 1);
+                            }else{
+                                item.unit=qty;
+                            }
                             isExist=true;
                         }
                     })

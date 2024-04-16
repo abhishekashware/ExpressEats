@@ -120,7 +120,7 @@ module.exports.DeleteFromCart=async(req,res,next)=>{
             })
         }
 
-        const {data}= req.service.GetProductPayload(_id,{productId},'REMOVE_FROM_CART')
+        const {data}= await req.service.GetProductPayload(_id,{productId,qty:0},'REMOVE_FROM_CART')
         if(data.error){
             return res.status(400).json({
                 msg:"Invalid product"

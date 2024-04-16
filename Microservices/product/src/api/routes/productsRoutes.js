@@ -12,7 +12,7 @@ router.get('/ids',productController.SearchProductsByIdList);
 router.get('/',productController.GetAllProducts);
 // add to cart
 router.put('/cart',UserAuth,productController.AddToCart);
-router.delete('/cart/:id',UserAuth,productController.DeleteFromCart);
+router.delete('/cart/:productId',UserAuth,productController.DeleteFromCart);
 router.put('/wishlist',UserAuth,productController.AddToWishList);
 router.delete('/wishlist',UserAuth,productController.RemoveFromWishList);
 

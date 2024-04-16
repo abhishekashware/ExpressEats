@@ -32,11 +32,24 @@ class ShoppingRepository {
         throw new APIError('API Error',STATUS_CODES.INTERNAL_ERROR,err.message);
     }
     }
+
+    async CreateCart(customerId){
+        try{
+        const cart=new CartModel({
+            customerId,
+            items:[]
+        })
+        
+        return await cart.save();
+    }catch(err){
+        throw new APIError('API Error',STATUS_CODES.INTERNAL_ERROR,err.message);
+    }
+    }
  
 
     async AddCartItem(customerId,item,qty,IsRemove){
         try{
-            const cart = await CartModel.findById({customerId});
+            const cart = await CartModel.findOne({customerId});
             // const {_id}=item;
             if(cart){
     
@@ -51,7 +64,11 @@ class ShoppingRepository {
                     cartItems.map((item)=>{
     
                         if(item.product._id.toString()===product._id.toString()){
-                            item.unit=qty;
+                            if(IsRemove){
+                                cartItems.splice(cartItems.indexOf(item), 1);
+                            }else{
+                                item.unit=qty;
+                            }
                             isExist=true;
                         }
                     })
@@ -65,7 +82,6 @@ class ShoppingRepository {
                 cart.items=cartItems;
                 return await cart.save();
             }
-    
             return {"msg":"unable to add item to cart"}
         }
         catch(err){
@@ -79,11 +95,9 @@ class ShoppingRepository {
 
  
     async CreateNewOrder(customerId, txnId){
-
         //check transaction for payment Status
         try{
             const cart = await CartModel.findById({customerId});
-    
             if(cart){
                 
                 let amount = 0;   
