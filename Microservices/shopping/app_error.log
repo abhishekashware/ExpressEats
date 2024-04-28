@@ -6,3 +6,4 @@
 {"level":"error","message":"Tue Apr 16 2024 22:58:40 GMT+0530 (India Standard Time)-{\"name\":\"Data Not Found\",\"statusCode\":{\"name\":\"API Error\",\"statusCode\":500,\"isOperational\":true},\"isOperational\":true}","private":true}
 {"level":"error","message":"Tue Apr 16 2024 22:58:57 GMT+0530 (India Standard Time)-{\"name\":\"Data Not Found\",\"statusCode\":{},\"isOperational\":true}","private":true}
 {"level":"error","message":"Tue Apr 16 2024 22:59:54 GMT+0530 (India Standard Time)-{\"name\":\"Data Not Found\",\"statusCode\":{\"name\":\"API Error\",\"statusCode\":500,\"isOperational\":true},\"isOperational\":true}","private":true}
+{"level":"error","message":"Tue Apr 16 2024 23:51:11 GMT+0530 (India Standard Time)-{\"name\":\"Data Not Found\",\"statusCode\":{\"name\":\"API Error\",\"statusCode\":500,\"isOperational\":true},\"isOperational\":true}","private":true}
